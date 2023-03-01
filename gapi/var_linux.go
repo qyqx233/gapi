@@ -1,4 +1,4 @@
 package main
 
-var Shell = "cmd"
+var Shell = "bash"
 var ShellArg = "-c"

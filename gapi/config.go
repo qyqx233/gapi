@@ -7,7 +7,8 @@ import (
 )
 
 type AppConfig struct {
-	Addr string `yaml:"addr"`
+	Addr   string `yaml:"addr"`
+	MaxCpu int    `yaml:"max_cpu"`
 }
 
 type Config struct {

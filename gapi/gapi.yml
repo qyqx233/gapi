@@ -1,2 +1,4 @@
 app:
   addr: ":5555"
+  max_cpu: 4
+  

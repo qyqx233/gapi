@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"runtime"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -24,6 +25,10 @@ func main() {
 	flag.StringVar(&configPath, "c", "gapi.yml", "config path")
 	flag.Parse()
 	config := parseYaml(configPath)
+	if config.App.MaxCpu == 0 {
+		config.App.MaxCpu = 4
+	}
+	runtime.GOMAXPROCS(config.App.MaxCpu)
 
 	app := fiber.New()
 	app.Post("/executeCmd", func(c *fiber.Ctx) error {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -19,29 +20,37 @@ type ExecuteCmdRs struct {
 }
 
 func main() {
+	var configPath string
+	flag.StringVar(&configPath, "c", "gapi.yml", "config path")
+	flag.Parse()
+	config := parseYaml(configPath)
+
 	app := fiber.New()
 	app.Post("/executeCmd", func(c *fiber.Ctx) error {
 		// Parse request body
-		var req ExecuteCmdRq
-		if err := c.BodyParser(&req); err != nil {
+		var rq ExecuteCmdRq
+		if err := c.BodyParser(&rq); err != nil {
 			return err
 		}
-		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(req.Timeout)*time.Second)
+		if rq.Timeout == 0 {
+			rq.Timeout = 30
+		}
+		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(rq.Timeout)*time.Second)
 		defer cancel()
-		outStr, errStr, err := executeCmd(ctx, req.Cmd)
+		outStr, errStr, err := executeCmd(ctx, rq.Cmd)
 		// Process request
 
-		res := ExecuteCmdRs{
+		rs := ExecuteCmdRs{
 			Err: errStr,
 			Out: outStr,
 		}
 
 		if err != nil {
-			res.Msg = err.Error()
+			rs.Msg = err.Error()
 		}
 		// Return response
-		return c.JSON(res)
+		return c.JSON(rs)
 	})
 
-	app.Listen(":3000")
+	app.Listen(config.App.Addr)
 }

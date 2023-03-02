@@ -6,10 +6,11 @@ import (
 	"os/exec"
 )
 
-func executeCmd(ctx context.Context, command string) (string, string, error) {
+func executeCmd(ctx context.Context, command string, path string) (string, string, error) {
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
 	cmd := exec.CommandContext(ctx, Shell, ShellArg, command)
+	cmd.Dir = path
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	err := cmd.Run()

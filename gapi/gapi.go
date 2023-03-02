@@ -10,8 +10,9 @@ import (
 )
 
 type ExecuteCmdRq struct {
-	Cmd     string `json:"cmd"`
 	Timeout int    `json:"timeout"`
+	Cmd     string `json:"cmd"`
+	Path    string `json:"path"`
 }
 
 type ExecuteCmdRs struct {
@@ -32,7 +33,6 @@ func main() {
 
 	app := fiber.New()
 	app.Post("/executeCmd", func(c *fiber.Ctx) error {
-		// Parse request body
 		var rq ExecuteCmdRq
 		if err := c.BodyParser(&rq); err != nil {
 			return err
@@ -42,7 +42,7 @@ func main() {
 		}
 		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(rq.Timeout)*time.Second)
 		defer cancel()
-		outStr, errStr, err := executeCmd(ctx, rq.Cmd)
+		outStr, errStr, err := executeCmd(ctx, rq.Cmd, rq.Path)
 		// Process request
 
 		rs := ExecuteCmdRs{

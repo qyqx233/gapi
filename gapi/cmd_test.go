@@ -2,12 +2,20 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"testing"
+	"time"
 )
+
+func Test_executeCmd(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(2)*time.Second)
+	defer cancel()
+	t.Log(executeCmd(ctx, "dir", "D:\\download\\httpdownload"))
+}
 
 func Test(t *testing.T) {
 	url := "http://localhost:3000/executeCmd"

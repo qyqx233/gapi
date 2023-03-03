@@ -32,6 +32,12 @@ func main() {
 	runtime.GOMAXPROCS(config.App.MaxCpu)
 
 	app := fiber.New()
+
+	// fmt.Println(config.App.Static.Browse, config.App.Static.Url, config.App.Static.Dir)
+	app.Static(config.App.Static.Url, config.App.Static.Dir, fiber.Static{
+		// Browse: config.App.Static.Browse,
+	})
+
 	app.Post("/executeCmd", func(c *fiber.Ctx) error {
 		var rq ExecuteCmdRq
 		if err := c.BodyParser(&rq); err != nil {

@@ -6,9 +6,16 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type AppStaticConfig struct {
+	Dir    string `json:"dir,omitempty"`
+	Url    string `json:"url,omitempty"`
+	Browse bool   `json:"browse,omitempty"`
+}
+
 type AppConfig struct {
-	Addr   string `yaml:"addr"`
-	MaxCpu int    `yaml:"max_cpu"`
+	Addr   string           `yaml:"addr" json:"addr,omitempty"`
+	MaxCpu int              `yaml:"max_cpu" json:"max_cpu,omitempty"`
+	Static *AppStaticConfig `json:"static,omitempty"`
 }
 
 type Config struct {
